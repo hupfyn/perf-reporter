@@ -9,6 +9,7 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "influxdb-nodejs": "^3.1.0",
+    "multer": "^1.4.2",
     "pug": "^2.0.4"
   }
 }
