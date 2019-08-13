@@ -127,21 +127,6 @@ html
           content+= "</div>";
           e.innerHTML = content;
         }
-        //- function drawDistribChart(chartData) {
-        //-   var preperedData = [['Initiator','Count']]
-        //-   var colorMap = []
-        //-   for (var [key, value] of chartData) {
-        //-       preperedData.push([key,value[1]])
-        //-       colorMap.push(value[0])
-        //-   }
-        //-   var data = google.visualization.arrayToDataTable(preperedData);
-        //-   var options = {
-        //-      title: 'Distribution resources by initiator',
-        //-      colors:colorMap
-        //-   };
-        //-   var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
-        //-   chart.draw(data, options);
-        //- }
     script(type='text/javascript').
       setInterval(function() {
         var elem = document.getElementsByClassName('google-visualization-tooltip-action');
@@ -213,9 +198,6 @@ html
             }
         }
         createLegendTable(dataForLegend)
-        //- google.charts.load('current', {'packages':['corechart']});
-        //- google.charts.setOnLoadCallback(function(){drawDistribChart(dataForLegend)});
-      
         
         var options = {
           timeline: { 

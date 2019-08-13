@@ -1,34 +1,27 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var multer  = require('multer');
-var upload = multer({ dest: 'uploads/' });
+var multer = require('multer');
+var upload = multer({ dest: '/tmp/uploads/' });
 var app = express();
 var port = process.env.PORT || 8585;
 
-var HtmlReporter = require('./report_generator_module/report').generateHtmlReport
 
+var Report = require('./report_generator_module/Reporter').GenerateReport
 
-app.use(bodyParser.json({limit: '50mb', extended: true}))
+app.use(bodyParser.json({ limit: '50mb', extended: true }))
 
-app.post('/generate', async function(request, responce){
-    console.log('Data received to processing')
-    await HtmlReporter(request.body)
-    console.log('Html report was generated')
-    responce.send("Report was generated")
+var cpUpload = upload.fields([{ name: 'video', maxCount: 1 }, { name: 'performanceData', maxCount: 1 }, { name: 'auditData', maxCount: 1 }])
+app.post('/metric', cpUpload, async function (request, response) {
+    console.warn('Data received to processing')
+    response.send('Data received to processing')
+
+    var metric = request.body.performanceData
+    var auditData = request.body.auditData
+    var videoPath = request.files.video[0].path
+
+    Report(metric,auditData,videoPath)
 })
-
-app.post('/influx', async function(request, responce){
-    console.log('Data received to processing')
-})
-var cpUpolad = upload.fields([{ name: 'video', maxCount: 1 }, { name: 'data', maxCount: 1 }])
-app.post('/metric', cpUpolad ,async function(request, responce){
-    console.log('Data received to processing')
-    responce.send('Data received to processing')
-    console.log(request.files.video)
-    // console.log(request.body)
-})
-
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`)
-  })
+})
