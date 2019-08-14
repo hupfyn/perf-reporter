@@ -54,12 +54,12 @@ async function prepareDataToReport(data, score) {
     var pageTimings = data.performance;
     var resorceTimings = data.resource
     var imageBase64Array = await getBase64Images(data.pageName)
-    var status = data.status
+    
     dataforHtml.pageName = data.pageName
     dataforHtml.ReportTiming = JSON.stringify(pageTimings)
     dataforHtml.ReportResource = JSON.stringify(resorceTimings)
     dataforHtml.frameBase64Array = imageBase64Array
-    dataforHtml.TestStatus = status == "true" ? "Passed" : "Failure"
+    dataforHtml.TestStatus = data.status
     return dataforHtml
 }
 
