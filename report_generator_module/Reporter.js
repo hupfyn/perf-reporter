@@ -5,7 +5,8 @@ var regex = /(\\"(.+.)\\")/
 
 async function GenerateReport(metric, auditResult, videoPath, ieResourceMetric) {
     var metric = JSON.parse(metric)
-    if (ieResourceMetric.length > 1) {
+    console.log(ieResourceMetric)
+    if (ieResourceMetric != 'none') {
         while (regex.test(ieResourceMetric)) {
             var valueToReplace = regex.exec(ieResourceMetric)
             ieResourceMetric = ieResourceMetric.replace(valueToReplace[1], valueToReplace[2])
@@ -41,6 +42,7 @@ async function GenerateReport(metric, auditResult, videoPath, ieResourceMetric) 
     while (compliteTrigger < 7) {
         compliteTrigger = await fs.readdirSync('/tmp/frames/' + testName + '/').length
     }
+    await fs.unlinkSync(videoPath)
     await prepareDataToReport(metric, auditResult)
         .then((dataForReport) => HtmlReporter(dataForReport))
         .then(() => { console.log('report: ' + testName + ' was generated') })
