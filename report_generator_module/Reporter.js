@@ -1,8 +1,17 @@
 var fs = require('fs')
 var HtmlReporter = require('./htmlGenerator').generateHtmlReport
 
-async function GenerateReport(metric, auditResult, videoPath) {
+var regex = /(\\"(.+.)\\")/
+
+async function GenerateReport(metric, auditResult, videoPath, ieResourceMetric) {
     var metric = JSON.parse(metric)
+    if (ieResourceMetric.length > 1) {
+        while (regex.test(ieResourceMetric)) {
+            var valueToReplace = regex.exec(ieResourceMetric)
+            ieResourceMetric = ieResourceMetric.replace(valueToReplace[1], valueToReplace[2])
+        }
+        metric.resource = JSON.parse(ieResourceMetric)
+    }
     var auditResult = JSON.parse(auditResult)
     var cutterStart = (metric.performance.navigationStart - metric.startTime) / 1000
     var loadEventEnd = metric.performance.loadEventEnd - metric.performance.navigationStart
@@ -19,23 +28,23 @@ async function GenerateReport(metric, auditResult, videoPath) {
     resultTimestampFrames = resultTimestampFrames.map((time) => time / 1000).map((time) => (time + cutterStart).toFixed(2))
 
     var ffmpegProcess = require('child_process').spawn
-    if(!fs.existsSync('/tmp/frames/'+testName)){
-        await fs.mkdirSync('/tmp/frames/'+testName)
+    if (!fs.existsSync('/tmp/frames/' + testName)) {
+        await fs.mkdirSync('/tmp/frames/' + testName)
     }
     for (const time in resultTimestampFrames) {
-        ffmpeg = ffmpegProcess('ffmpeg', ['-ss', resultTimestampFrames[time], '-i', videoPath, '-vframes','1', '/tmp/frames/' + testName + '/'+time+'_out.jpg'])
-        ffmpeg.on('end', function() {
+        ffmpeg = ffmpegProcess('ffmpeg', ['-ss', resultTimestampFrames[time], '-i', videoPath, '-vframes', '1', '/tmp/frames/' + testName + '/' + time + '_out.jpg'])
+        ffmpeg.on('end', function () {
             console.log('file has been converted successfully');
         })
     }
     var compliteTrigger = 0
-    while (compliteTrigger < 7){
+    while (compliteTrigger < 7) {
         compliteTrigger = await fs.readdirSync('/tmp/frames/' + testName + '/').length
     }
     await prepareDataToReport(metric, auditResult)
-                .then((dataForReport) => HtmlReporter(dataForReport))
-                .then(()=>{console.log('report: '+testName +' was generated')})
-                .catch((err)=>{console.log(err)})
+        .then((dataForReport) => HtmlReporter(dataForReport))
+        .then(() => { console.log('report: ' + testName + ' was generated') })
+        .catch((err) => { console.log(err) })
 }
 
 async function getBase64Images(pageName) {
@@ -54,7 +63,7 @@ async function prepareDataToReport(data, score) {
     var pageTimings = data.performance;
     var resorceTimings = data.resource
     var imageBase64Array = await getBase64Images(data.pageName)
-    
+
     dataforHtml.pageName = data.pageName
     dataforHtml.ReportTiming = JSON.stringify(pageTimings)
     dataforHtml.ReportResource = JSON.stringify(resorceTimings)

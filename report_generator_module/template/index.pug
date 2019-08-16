@@ -63,6 +63,7 @@ html
       google.charts.load('current', {'packages':['timeline']});
       google.charts.setOnLoadCallback(function(){drawChart('!{ReportTiming}')});
       function drawChart(time_data) {
+        window.perfuiTime = time_data
         var testData = JSON.parse(time_data)
         var container = document.getElementById('timeLine');
         var chart = new google.visualization.Timeline(container);
@@ -153,6 +154,7 @@ html
         drawChartRes('!{ReportResource}');
       });
       function drawChartRes(resourcesData) {
+        window.perfuiRes = resourcesData
         var dataVisualise = JSON.parse(resourcesData)
         var container = document.getElementById('timeLine2');
         var chart = new google.visualization.Timeline(container);
@@ -160,8 +162,11 @@ html
 
         function prepareData(data,colorMap){
             var collection = []
-            for (const resources of data) {
-                collection.push( [resources.initiatorType ,resources.name.substring(0,40) + " ("+Math.floor(resources.duration)+"ms)", colorMap[resources.initiatorType] , resources.startTime, resources.responseEnd,])
+            for (var resources of data) {
+              if(resources.startTime > resources.responseEnd){
+                resources.responseEnd = resources.startTime
+              }
+              collection.push( [resources.initiatorType ,resources.name.substring(0,40) + " ("+Math.floor(resources.duration)+"ms)", colorMap[resources.initiatorType] , resources.startTime, resources.responseEnd,])
             }
             return collection
         }
