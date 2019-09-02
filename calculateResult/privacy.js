@@ -51,10 +51,9 @@ function privacyGoogleAnalyticsScore(score) {
     };
 }
 
-function privacyHttpsScore(data) {
-    console.log(data)
-    var scores = data[0]
-    var message = data[1]
+function privacyHttpsScore(privacyData) {
+    var scores = privacyData[0]
+    var message = privacyData[1]
     return {
         id: 'https',
         title: 'Serve your content securely',
@@ -68,10 +67,10 @@ function privacyHttpsScore(data) {
     };
 }
 
-function privacySurveillanceScore(data) {
-    var score = data[0]
-    var offending = data[1]
-    var docDomain = data[2]
+function privacySurveillanceScore(privacyData) {
+    var score = privacyData[0]
+    var offending = privacyData[1]
+    var docDomain = privacyData[2]
     return {
         id: 'surveillance',
         title: 'Avoid using surveillance web sites',
@@ -107,7 +106,6 @@ function privacyYouTubeScore(score) {
 }
 
 function calculatePrivacyScore(auditData){
-    console.log(auditData.privacyHTTPS)
     var result =  {
         'adviceList': {
             'ampPrivacy':ampPrivacy(auditData.privacyAMP),
@@ -118,7 +116,7 @@ function calculatePrivacyScore(auditData){
             'youtube':privacyYouTubeScore(auditData.privacyYouTube)
         }
     }
-    result.score = calculatePrivacyScore(result.adviceList)
+    result.score = calculateAdviceScore(result.adviceList)
     return result
 }
 
