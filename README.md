@@ -1,4 +1,6 @@
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhupfyn%2Fperf-reporter.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhupfyn%2Fperf-reporter?ref=badge_shield)
+
 # perf-reporter
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fhupfyn%2Fperf-reporter.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fhupfyn%2Fperf-reporter?ref=badge_shield)
-![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/hupfyn/perf-reporter)
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhupfyn%2Fperf-reporter.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhupfyn%2Fperf-reporter?ref=badge_large)
